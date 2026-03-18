@@ -1,0 +1,14 @@
+# Скомпилированные файлы
+finance_manager
+*.o
+*.out
+
+# Файлы macOS
+.DS_Store
+
+# Временные файлы редакторов
+.vscode/
+*.swp
+
+# Папки отладки macOS
+*.dSYM/
