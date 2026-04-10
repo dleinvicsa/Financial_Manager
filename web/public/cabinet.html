@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CashFlow | Personal Cabinet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="cabinet">
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <main class="layout">
+    <header id="shellHeader"></header>
+
+    <section class="panel">
+      <h1>Personal Cabinet</h1>
+      <form id="profileForm" class="grid-form">
+        <label>
+          Name
+          <input id="ownerName" required />
+        </label>
+        <label>
+          Email
+          <input id="ownerEmail" type="email" required />
+        </label>
+        <label>
+          Created at
+          <input id="createdAt" type="date" required />
+        </label>
+        <button type="submit">Save profile</button>
+      </form>
+      <p id="profileMessage" class="message"></p>
+    </section>
+
+    <section class="cards" id="cabinetCards"></section>
+  </main>
+
+  <script src="/common.js"></script>
+  <script src="/cabinet.js"></script>
+</body>
+</html>

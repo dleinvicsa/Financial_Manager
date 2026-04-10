@@ -1,0 +1,22 @@
+{
+  "transactions": [
+    {
+      "id": 1,
+      "amount": 324.56,
+      "categoryId": 4,
+      "walletId": 1,
+      "isIncome": false,
+      "date": "2026-04-09",
+      "description": "Cloth"
+    },
+    {
+      "id": 2,
+      "amount": 230,
+      "categoryId": 3,
+      "walletId": 1,
+      "isIncome": false,
+      "date": "2026-04-09",
+      "description": "Restaurant"
+    }
+  ]
+}

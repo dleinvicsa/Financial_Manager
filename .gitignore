@@ -12,3 +12,24 @@ finance_manager
 
 # Папки отладки macOS
 *.dSYM/
+
+# Логи
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Переменные окружения
+.env
+.env.*
+
+# Node.js
+node_modules/
+
+# Кэш и временные файлы
+*.tmp
+*.temp
+*.bak
+
+# IDE
+.idea/

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CashFlow | Transactions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="transactions">
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <main class="layout">
+    <header id="shellHeader"></header>
+
+    <section class="panel">
+      <h2>Add Transaction</h2>
+      <form id="txForm" class="grid-form">
+        <label>
+          Type
+          <select id="txType">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </label>
+        <label>
+          Amount
+          <input id="txAmount" type="number" min="0.01" step="0.01" required />
+        </label>
+        <label>
+          Wallet
+          <select id="txWallet" required></select>
+        </label>
+        <label>
+          Category
+          <select id="txCategory" required></select>
+        </label>
+        <label>
+          Date
+          <input id="txDate" type="date" required />
+        </label>
+        <label class="wide">
+          Description
+          <input id="txDescription" maxlength="120" placeholder="Optional" />
+        </label>
+        <button type="submit">Save</button>
+      </form>
+      <p id="txMessage" class="message"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Transaction History</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Wallet</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="txBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/common.js"></script>
+  <script src="/transactions.js"></script>
+</body>
+</html>

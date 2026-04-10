@@ -1,21 +1,25 @@
-# Переменная для компилятора
 CXX = g++
-# Флаги компиляции (добавляем отладку и предупреждения)
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -Wextra -std=c++17 -g
 
-# Имя итогового файла
 TARGET = finance_manager
 
-# Список всех .cpp файлов (автоматически находит их в src/ и текущей папке)
-SRCS = main.cpp src/Category.cpp src/Transaction.cpp src/Wallet.cpp
+SRCS = main.cpp \
+	src/AppEngine.cpp \
+	src/Category.cpp \
+	src/DataManager.cpp \
+	src/Statistics.cpp \
+	src/Transaction.cpp \
+	src/Utils.cpp \
+	src/Wallet.cpp
 
-# Правило по умолчанию
 all: $(TARGET)
 
-# Как собрать итоговый файл
 $(TARGET): $(SRCS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS)
 
-# Как очистить проект от скомпилированных файлов
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) .DS_Store
+	rm -rf $(TARGET).dSYM
+
+run-web:
+	node web/server.js

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CashFlow | Wallets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-page="wallets">
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <main class="layout">
+    <header id="shellHeader"></header>
+
+    <section class="split">
+      <div class="panel">
+        <h2>Create Wallet</h2>
+        <form id="createWalletForm" class="grid-form">
+          <label>
+            Name
+            <input id="walletName" required />
+          </label>
+          <label>
+            Initial balance
+            <input id="walletBalance" type="number" min="0" step="0.01" value="0" required />
+          </label>
+          <button type="submit">Create</button>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Top Up Wallet</h2>
+        <form id="topupForm" class="grid-form">
+          <label>
+            Wallet
+            <select id="topupWallet" required></select>
+          </label>
+          <label>
+            Amount
+            <input id="topupAmount" type="number" min="0.01" step="0.01" required />
+          </label>
+          <button type="submit">Top up</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Wallet List</h2>
+      <p id="walletMessage" class="message"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Balance</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="walletBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/common.js"></script>
+  <script src="/wallets.js"></script>
+</body>
+</html>

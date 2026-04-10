@@ -1,0 +1,10 @@
+{
+  "profiles": [
+    {
+      "username": "test1",
+      "ownerName": "Test One",
+      "email": "one@example.com",
+      "createdAt": ""
+    }
+  ]
+}

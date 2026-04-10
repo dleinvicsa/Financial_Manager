@@ -6,22 +6,27 @@
 
 class Transaction {
     public:
-        Transaction(int id, double amount, int categoryId, const std::string& date, const std::string& description);
+        Transaction();
+        Transaction(int id, double amount, int categoryId, int walletId, bool isIncome, const std::string& date, const std::string& description);
         
-            int getId() const;
-            double getAmount() const;
-            int getCategoryId() const;
-            std::string getDate() const;
-            std::string getDescription() const;
+        int getId() const;
+        double getAmount() const;
+        int getCategoryId() const;
+        int getWalletId() const;
+        bool getIsIncome() const;
+        std::string getDate() const;
+        std::string getDescription() const;
 
-            std::string toString() const;
+        std::string toString() const;
 
     private:
-    int id;
-    double amount;
-    int categoryId;
-    std::string date;
-    std::string description;
+        int id;
+        double amount;
+        int categoryId;
+        int walletId;
+        bool isIncome;
+        std::string date;
+        std::string description;
 };
 
 #endif
