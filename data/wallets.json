@@ -1,26 +1,3 @@
 {
-  "wallets": [
-    {
-      "id": 1,
-      "name": "Cash",
-      "balance": 445.44000000000005
-    },
-    {
-      "id": 2,
-      "name": "Credit card",
-      "balance": 250
-    },
-    {
-      "id": 1,
-      "name": "Private Test1 Wallet",
-      "balance": 123.45,
-      "username": "test1"
-    },
-    {
-      "id": 1,
-      "name": "ffffff",
-      "balance": 4000,
-      "username": "denis1"
-    }
-  ]
+  "wallets": []
 }

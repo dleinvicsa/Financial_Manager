@@ -20,28 +20,6 @@ Project Structure
 - web/server.js: Web API + static file server
 - web/public/: Frontend pages, scripts, and styles
 
-Build and Run (Console App)
-1. Open terminal in the project root (FinanceManager).
-2. Build:
-	make
-3. Run:
-	./finance_manager
-
-Build and Run on Windows (Console App)
-Option A: MSYS2 / MinGW (with make + g++)
-1. Open MSYS2 MinGW terminal in the project root.
-2. Build:
-	make
-3. Run:
-	./finance_manager.exe
-
-Option B: PowerShell with g++ only (without make)
-1. Open PowerShell in the project root.
-2. Build:
-	g++ -Wall -Wextra -std=c++17 -g -o finance_manager.exe main.cpp src/AppEngine.cpp src/Category.cpp src/DataManager.cpp src/Statistics.cpp src/Transaction.cpp src/Utils.cpp src/Wallet.cpp
-3. Run:
-	.\finance_manager.exe
-
 Run Web Version
 1. Open terminal in the project root (FinanceManager).
 2. Start server:
@@ -51,19 +29,19 @@ Run Web Version
 3. Open in browser:
 	http://localhost:8080
 
+Stop Web Server
+- Press Ctrl + C in the terminal where the server is running.
+
 Run Web Version on Windows
 PowerShell:
 1. Open PowerShell in the project root (FinanceManager).
-2. Start server:
+2. If Node.js is not installed, install Node.js 18+ from https://nodejs.org and reopen PowerShell.
+3. Check that Node.js is available:
+	node -v
+4. Start server:
 	node web/server.js
-3. Open in browser:
+5. Open in browser:
 	http://localhost:8080
-
-If you use Git Bash or MSYS2 and have make installed, you can also run:
-	make run-web
-
-Stop Web Server
-- Press Ctrl + C in the terminal where the server is running.
 
 Stop Web Server on Windows
 - Press Ctrl + C in PowerShell/CMD/Git Bash where the server is running.

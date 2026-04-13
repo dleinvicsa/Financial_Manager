@@ -1,24 +1,3 @@
 {
-  "categories": [
-    {
-      "id": 1,
-      "name": "Salary",
-      "isIncome": true
-    },
-    {
-      "id": 2,
-      "name": "Gift",
-      "isIncome": true
-    },
-    {
-      "id": 3,
-      "name": "Food",
-      "isIncome": false
-    },
-    {
-      "id": 4,
-      "name": "Shopping",
-      "isIncome": false
-    }
-  ]
+  "categories": []
 }
