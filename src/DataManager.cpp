@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -92,30 +93,48 @@ namespace {
 
 	json loadJsonOrDefault(const std::string& path, const json& fallback) {
 		if (!fileExists(path)) {
-			std::ofstream out(path, std::ios::trunc);
-			out << fallback.dump(2) << "\n";
+			std::ofstream out(path, std::ios::binary | std::ios::trunc);
+			std::vector<std::uint8_t> payload = json::to_cbor(fallback);
+			out.write(reinterpret_cast<const char*>(payload.data()), static_cast<std::streamsize>(payload.size()));
 			return fallback;
 		}
 
-		std::ifstream in(path);
+		std::ifstream in(path, std::ios::binary);
 		if (!in.good()) {
 			return fallback;
 		}
 
-		try {
-			json parsed;
-			in >> parsed;
-			return parsed;
-		} catch (...) {
-			std::ofstream out(path, std::ios::trunc);
-			out << fallback.dump(2) << "\n";
+		std::vector<std::uint8_t> bytes((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+		if (bytes.empty()) {
+			std::ofstream out(path, std::ios::binary | std::ios::trunc);
+			std::vector<std::uint8_t> payload = json::to_cbor(fallback);
+			out.write(reinterpret_cast<const char*>(payload.data()), static_cast<std::streamsize>(payload.size()));
 			return fallback;
+		}
+
+		try {
+			return json::from_cbor(bytes);
+		} catch (...) {
+			try {
+				std::string raw(bytes.begin(), bytes.end());
+				json parsed = json::parse(raw);
+				std::ofstream out(path, std::ios::binary | std::ios::trunc);
+				std::vector<std::uint8_t> payload = json::to_cbor(parsed);
+				out.write(reinterpret_cast<const char*>(payload.data()), static_cast<std::streamsize>(payload.size()));
+				return parsed;
+			} catch (...) {
+				std::ofstream out(path, std::ios::binary | std::ios::trunc);
+				std::vector<std::uint8_t> payload = json::to_cbor(fallback);
+				out.write(reinterpret_cast<const char*>(payload.data()), static_cast<std::streamsize>(payload.size()));
+				return fallback;
+			}
 		}
 	}
 
 	void saveJson(const std::string& path, const json& value) {
-		std::ofstream out(path, std::ios::trunc);
-		out << value.dump(2) << "\n";
+		std::ofstream out(path, std::ios::binary | std::ios::trunc);
+		std::vector<std::uint8_t> payload = json::to_cbor(value);
+		out.write(reinterpret_cast<const char*>(payload.data()), static_cast<std::streamsize>(payload.size()));
 	}
 
 	json jsonFromAccountsDat(const std::string& content) {
@@ -294,10 +313,23 @@ namespace {
 
 	void createJsonWithFallback(
 		const std::string& jsonPath,
+		const std::string& legacyJsonPath,
 		const std::string& legacyDatPath,
 		const json& defaultValue,
 		const std::function<json(const std::string&)>& migrateFromDat) {
 		if (fileExists(jsonPath)) {
+			return;
+		}
+
+		if (fileExists(legacyJsonPath)) {
+			std::ifstream in(legacyJsonPath);
+			json parsed = defaultValue;
+			try {
+				in >> parsed;
+			} catch (...) {
+				parsed = defaultValue;
+			}
+			saveJson(jsonPath, parsed);
 			return;
 		}
 
@@ -315,14 +347,14 @@ namespace {
 
 DataManager::DataManager(const std::string& dataPath)
 	: dataRoot(dataPath),
-	  accountsFile(dataPath + "/accounts.json"),
+	  accountsFile(dataPath + "/accounts.bin"),
 	  activeUser(""),
-	  categoriesFile(dataPath + "/categories.json"),
-	  walletsFile(dataPath + "/wallets.json"),
-	  transactionsFile(dataPath + "/transactions.json"),
-	  profileFile(dataPath + "/profile.json") {
+	  categoriesFile(dataPath + "/categories.bin"),
+	  walletsFile(dataPath + "/wallets.bin"),
+	  transactionsFile(dataPath + "/transactions.bin"),
+	  profileFile(dataPath + "/profile.bin") {
 	ensureDirectoryExists(dataRoot);
-	createJsonWithFallback(accountsFile, dataRoot + "/accounts.dat", defaultAccountsJson(), jsonFromAccountsDat);
+	createJsonWithFallback(accountsFile, dataRoot + "/accounts.json", dataRoot + "/accounts.dat", defaultAccountsJson(), jsonFromAccountsDat);
 	refreshUserFiles();
 }
 
@@ -403,10 +435,10 @@ void DataManager::setActiveUser(const std::string& username) {
 	activeUser = username;
 	refreshUserFiles();
 	ensureDirectoryExists(dataRoot);
-	createJsonWithFallback(categoriesFile, dataRoot + "/categories.dat", defaultCategoriesJson(), jsonFromCategoriesDat);
-	createJsonWithFallback(walletsFile, dataRoot + "/wallets.dat", defaultWalletsJson(), jsonFromWalletsDat);
-	createJsonWithFallback(transactionsFile, dataRoot + "/transactions.dat", defaultTransactionsJson(), jsonFromTransactionsDat);
-	createJsonWithFallback(profileFile, dataRoot + "/profile.dat", defaultProfileJson(), jsonFromProfileDat);
+	createJsonWithFallback(categoriesFile, dataRoot + "/categories.json", dataRoot + "/categories.dat", defaultCategoriesJson(), jsonFromCategoriesDat);
+	createJsonWithFallback(walletsFile, dataRoot + "/wallets.json", dataRoot + "/wallets.dat", defaultWalletsJson(), jsonFromWalletsDat);
+	createJsonWithFallback(transactionsFile, dataRoot + "/transactions.json", dataRoot + "/transactions.dat", defaultTransactionsJson(), jsonFromTransactionsDat);
+	createJsonWithFallback(profileFile, dataRoot + "/profile.json", dataRoot + "/profile.dat", defaultProfileJson(), jsonFromProfileDat);
 }
 
 std::string DataManager::getActiveUser() const {
@@ -436,11 +468,11 @@ std::string DataManager::sanitizeUsername(const std::string& username) const {
 }
 
 void DataManager::refreshUserFiles() {
-	// Always use the shared, already existing JSON files in data/.
-	categoriesFile = dataRoot + "/categories.json";
-	walletsFile = dataRoot + "/wallets.json";
-	transactionsFile = dataRoot + "/transactions.json";
-	profileFile = dataRoot + "/profile.json";
+	// Always use the shared binary files in data/.
+	categoriesFile = dataRoot + "/categories.bin";
+	walletsFile = dataRoot + "/wallets.bin";
+	transactionsFile = dataRoot + "/transactions.bin";
+	profileFile = dataRoot + "/profile.bin";
 }
 
 std::vector<Category> DataManager::loadCategories() const {

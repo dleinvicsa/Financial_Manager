@@ -1,0 +1,12 @@
+{
+  "name": "finance-manager-web",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cbor": "^10.0.11"
+  }
+}

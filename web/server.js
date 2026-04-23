@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const cbor = require("cbor");
 const { URL } = require("url");
 
 const PORT = process.env.PORT || 8080;
@@ -10,6 +11,14 @@ const DATA_DIR = path.join(ROOT_DIR, "data");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 const FILES = {
+  accounts: path.join(DATA_DIR, "accounts.bin"),
+  categories: path.join(DATA_DIR, "categories.bin"),
+  wallets: path.join(DATA_DIR, "wallets.bin"),
+  transactions: path.join(DATA_DIR, "transactions.bin"),
+  profile: path.join(DATA_DIR, "profile.bin")
+};
+
+const LEGACY_JSON_FILES = {
   accounts: path.join(DATA_DIR, "accounts.json"),
   categories: path.join(DATA_DIR, "categories.json"),
   wallets: path.join(DATA_DIR, "wallets.json"),
@@ -30,41 +39,60 @@ function sendText(res, statusCode, payload, contentType = "text/plain; charset=u
   res.end(payload);
 }
 
-function readJson(filePath, fallback) {
-  try {
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, JSON.stringify(fallback, null, 2));
-      return structuredClone(fallback);
-    }
-
-    const raw = fs.readFileSync(filePath, "utf8");
-    return JSON.parse(raw);
-  } catch {
-    fs.writeFileSync(filePath, JSON.stringify(fallback, null, 2));
-    return structuredClone(fallback);
-  }
+function writeBinary(filePath, payload) {
+  fs.writeFileSync(filePath, cbor.encode(payload));
 }
 
-function writeJson(filePath, payload) {
-  fs.writeFileSync(filePath, JSON.stringify(payload, null, 2));
+function readBinary(filePath, fallback, legacyJsonPath) {
+  try {
+    if (!fs.existsSync(filePath)) {
+      if (legacyJsonPath && fs.existsSync(legacyJsonPath)) {
+        const legacyRaw = fs.readFileSync(legacyJsonPath, "utf8");
+        const legacyParsed = JSON.parse(legacyRaw);
+        writeBinary(filePath, legacyParsed);
+        return legacyParsed;
+      }
+
+      writeBinary(filePath, fallback);
+      return JSON.parse(JSON.stringify(fallback));
+    }
+
+    const raw = fs.readFileSync(filePath);
+    if (!raw || raw.length === 0) {
+      writeBinary(filePath, fallback);
+      return JSON.parse(JSON.stringify(fallback));
+    }
+
+    try {
+      return cbor.decodeFirstSync(raw);
+    } catch {
+      // Recovery path for accidentally JSON-encoded binary files.
+      const textPayload = JSON.parse(raw.toString("utf8"));
+      writeBinary(filePath, textPayload);
+      return textPayload;
+    }
+  } catch {
+    writeBinary(filePath, fallback);
+    return JSON.parse(JSON.stringify(fallback));
+  }
 }
 
 function getDb() {
   return {
-    accounts: readJson(FILES.accounts, { accounts: [] }),
-    categories: readJson(FILES.categories, { categories: [] }),
-    wallets: readJson(FILES.wallets, { wallets: [] }),
-    transactions: readJson(FILES.transactions, { transactions: [] }),
-    profile: readJson(FILES.profile, { ownerName: "", email: "", createdAt: "" })
+    accounts: readBinary(FILES.accounts, { accounts: [] }, LEGACY_JSON_FILES.accounts),
+    categories: readBinary(FILES.categories, { categories: [] }, LEGACY_JSON_FILES.categories),
+    wallets: readBinary(FILES.wallets, { wallets: [] }, LEGACY_JSON_FILES.wallets),
+    transactions: readBinary(FILES.transactions, { transactions: [] }, LEGACY_JSON_FILES.transactions),
+    profile: readBinary(FILES.profile, { ownerName: "", email: "", createdAt: "" }, LEGACY_JSON_FILES.profile)
   };
 }
 
 function saveDb(db) {
-  writeJson(FILES.accounts, db.accounts);
-  writeJson(FILES.categories, db.categories);
-  writeJson(FILES.wallets, db.wallets);
-  writeJson(FILES.transactions, db.transactions);
-  writeJson(FILES.profile, db.profile);
+  writeBinary(FILES.accounts, db.accounts);
+  writeBinary(FILES.categories, db.categories);
+  writeBinary(FILES.wallets, db.wallets);
+  writeBinary(FILES.transactions, db.transactions);
+  writeBinary(FILES.profile, db.profile);
 }
 
 function nextId(items) {

@@ -25,6 +25,14 @@ yarn-error.log*
 
 # Node.js
 node_modules/
+web/node_modules/
+
+# Runtime data files
+data/*.bin
+data/*.json
+
+# VS Code task/output caches
+.vscode-test/
 
 # Кэш и временные файлы
 *.tmp

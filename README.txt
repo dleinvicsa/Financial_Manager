@@ -3,7 +3,7 @@ CashFlow (Financial Manager)
 CashFlow is a personal finance manager with:
 - a C++ console application
 - a lightweight Node.js web interface
-- JSON-based storage in the data directory
+- binary .bin storage in the data directory
 
 The web API now stores and returns data per user account, so each user sees only their own profile, wallets, categories, transactions, and statistics.
 
@@ -22,11 +22,13 @@ Project Structure
 
 Run Web Version
 1. Open terminal in the project root (FinanceManager).
-2. Start server:
+2. Install web dependencies (first run only):
+	npm install --prefix web
+3. Start server:
 	make run-web
 	or
 	node web/server.js
-3. Open in browser:
+4. Open in browser:
 	http://localhost:8080
 
 Stop Web Server
@@ -52,11 +54,14 @@ Available Make Targets
 - make run-web: Start Node.js web server
 
 Data Storage
-- accounts.json: Registered users
-- profile.json: Per-user profile records
-- wallets.json: Per-user wallets
-- categories.json: Per-user categories
-- transactions.json: Per-user transactions
+- accounts.bin: Registered users
+- profile.bin: Per-user profile records
+- wallets.bin: Per-user wallets
+- categories.bin: Per-user categories
+- transactions.bin: Per-user transactions
+
+Legacy migration
+- If old .json files exist, they are migrated to .bin automatically on first run.
 
 Notes
 - Frontend authentication state is stored in browser localStorage.
