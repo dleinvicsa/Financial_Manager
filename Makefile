@@ -21,5 +21,5 @@ clean:
 	rm -f $(TARGET) .DS_Store
 	rm -rf $(TARGET).dSYM
 
-run-web:
+run:
 	node web/server.js

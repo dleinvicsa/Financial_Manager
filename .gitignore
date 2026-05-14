@@ -1,25 +1,25 @@
-# Скомпилированные файлы
+# Compiled files
 finance_manager
 *.o
 *.out
 
-# Файлы macOS
+# macOS files
 .DS_Store
 
-# Временные файлы редакторов
+# Editor temporary files
 .vscode/
 *.swp
 
-# Папки отладки macOS
+# macOS debug folders
 *.dSYM/
 
-# Логи
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Переменные окружения
+# Variables 
 .env
 .env.*
 
@@ -31,10 +31,10 @@ web/node_modules/
 data/*.bin
 data/*.json
 
-# VS Code task/output caches
+# VS Code 
 .vscode-test/
 
-# Кэш и временные файлы
+#Temporary files
 *.tmp
 *.temp
 *.bak

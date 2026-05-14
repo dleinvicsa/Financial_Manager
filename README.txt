@@ -16,7 +16,7 @@ Project Structure
 - main.cpp: Console app entry point
 - src/: C++ business logic
 - include/: C++ headers (+ json.hpp)
-- data/: JSON database files
+- data/: Binary database files
 - web/server.js: Web API + static file server
 - web/public/: Frontend pages, scripts, and styles
 
@@ -25,7 +25,7 @@ Run Web Version
 2. Install web dependencies (first run only):
 	npm install --prefix web
 3. Start server:
-	make run-web
+	make run
 	or
 	node web/server.js
 4. Open in browser:
@@ -51,7 +51,7 @@ Stop Web Server on Windows
 Available Make Targets
 - make: Build console application
 - make clean: Remove build artifacts
-- make run-web: Start Node.js web server
+- make run: Start Node.js web server
 
 Data Storage
 - accounts.bin: Registered users
