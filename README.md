@@ -55,6 +55,12 @@ PowerShell:
 node -v
 ```
 
+If PowerShell blocks npm scripts, use CMD instead:
+
+```cmd
+npm install --prefix web
+```
+
 4. Start server:
 
 ```powershell
@@ -83,6 +89,8 @@ make run    # Start Node.js web server
 - wallets.bin: Per-user wallets
 - categories.bin: Per-user categories
 - transactions.bin: Per-user transactions
+
+The web server creates the `.bin` files automatically on first run. If you see missing file errors, make sure the `data/` directory exists in the project root (create it manually if needed).
 
 ## Legacy Migration
 - If old `.json` files exist, they are migrated to `.bin` automatically on first run.
